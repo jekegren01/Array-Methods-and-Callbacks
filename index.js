@@ -60,9 +60,9 @@ console.log(getFinals(fifaData));
 
 //  console.log(getYears(getFinals(fifaData)));
 
-function getYears(cb, data) {
+function getYears(cb) {
     const years = [];
-    const finals = cb(data);
+    const finals = cb(fifaData);
     // console.log(finals);
     finals.map(function(game){
         years.push(game.Year)
@@ -96,29 +96,62 @@ Parameters:
  * callback function getYears
  */
 
-function getWinnersByYear(/* code here */) {
-
+function getWinnersByYear(cb1, cb2) {
+    const winByYear = [];
+    const getWin = cb1(getFinals);
+    const getYear = cb2(getFinals);
+    for (let i = 0; i<getYear.length; i++) {
+        winByYear.push('In ' + getYear[i] + ', '+ getWin[i] +' won the world cup!!')
+        };
+    return winByYear;
 };
 
-getWinnersByYear();
+console.log(getWinnersByYear(getWinners, getYears));
 
 /* Task 7: Create a function called `getCountryWins` that takes the parameters `data` and `team initials` and returns the number of world cup wins that country has had. 
 
 Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
+function getCountryWins(data, teamInitials) {
+    const winnersInitials = [];
+    getFinals(data).forEach((match) => {
+      if (match["Home Team Goals"] > match["Away Team Goals"])
+        winnersInitials.push(match["Home Team Initials"]);
+      else if (match["Home Team Goals"] < match["Away Team Goals"])
+        winnersInitials.push(match["Away Team Initials"]);
+      else {
+        const winner = match["Win conditions"].split(" ")[0];
+        const initials =
+          match["Home Team Name"] === winner
+            ? match["Home Team Initials"]
+            : match["Away Team Initials"];
+        winnersInitials.push(initials);
+      }
+    });
+    console.log(winnersInitials);
+    return winnersInitials.reduce((total, winnerInitial) => {
+      return winnerInitial === teamInitials ? total + 1 : total;
+    }, 0);
+  }
+ 
+  console.log(getCountryWins(fifaData, "GER"));
+
 
 
 
 /* Task 8: Write a function called `getAverageGoals` that accepts a parameter `data` and returns the the average number of home team goals and away team goals scored per match (Hint: use .reduce and do this in 2 steps) */
 
-function getAverageGoals(/* code here */) {
-
-    /* code here */
-
-};
-
-getAverageGoals();
+function getAverageGoals(data) {
+    const totalGoals = data.reduce((total, currentMatch) => {
+      return (
+        total + currentMatch["Away Team Goals"] + currentMatch["Home Team Goals"]
+      );
+    }, 0);
+    return totalGoals / data.length;
+  }
+ 
+  console.log(getAverageGoals(fifaData));
 
 
 /// STRETCH 🥅 //
