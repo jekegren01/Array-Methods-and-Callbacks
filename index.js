@@ -100,6 +100,7 @@ function getWinnersByYear(cb1, cb2) {
     const winByYear = [];
     const getWin = cb1(getFinals);
     const getYear = cb2(getFinals);
+    // console.log(getYear);
     for (let i = 0; i<getYear.length; i++) {
         winByYear.push('In ' + getYear[i] + ', '+ getWin[i] +' won the world cup!!')
         };
